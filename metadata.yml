@@ -1,0 +1,9 @@
+---
+
+# name will support CamelCase after issue #3
+name: query_thalemine_as_jbrowse_index
+version: 0.1
+description: Query Thalemine
+type: map_filter
+main_module: main.py
+url: https://apps.araport.org/thalemine/service/jbrowse/names/3702
