@@ -1,0 +1,105 @@
+# Set variables that make things easier to do
+export NS=vaughn-dev
+export GITHUB_UNAME=mwvaughn
+export API=https://adama-dev.tacc.utexas.edu/community/v0.3
+export TOKEN=69b2d544d18d432896387550bc123e35
+
+# Get status. Confirm access to the system
+curl -sk -L -X GET $API/status -H "Authorization: Bearer $TOKEN"
+
+{
+    "api": "Adama v0.3", 
+    "hash": "477265a7ebbcedfadc1651b3be31c05e6514c49e", 
+    "status": "success"
+}
+
+# Add a namespace
+curl -sk -X POST $API/namespaces -Fname=${NS} -Fdescription="Developer workspace for @${GITHUB_UNAME}" \
+   -H "Authorization: Bearer $TOKEN"
+
+{
+    "result": "https://adama-dev.tacc.utexas.edu/community/v0.3/$NS", 
+    "status": "success"
+}
+
+# List all namespaces
+curl -sk -X GET $API/namespaces -H "Authorization: Bearer $TOKEN"
+
+{
+    "result": [ 
+        {
+            "description": null, 
+            "name": "walter-dev", 
+            "url": null
+        }, 
+        {
+            "description": "Developer workspace for @mwvaughn", 
+            "name": "vaughn-dev", 
+            "url": null
+        }
+    ], 
+    "status": "success"
+}
+
+# Register an Adama service using its Github repo
+
+curl -sk -L -X POST $API/$NS/services \
+    -F "git_repository=https://github.com/mwvaughn/queryThalemineAsJbrowseIndex.git" -H "Authorization: Bearer $TOKEN"
+
+{
+    "message": "registration started", 
+    "result": {
+        "list_url": "https://adama-dev.tacc.utexas.edu/community/v0.3/vaughn-dev/query_thalemine_as_jbrowse_index_v0.1/list", 
+        "notification": "", 
+        "search_url": "https://adama-dev.tacc.utexas.edu/community/v0.3/vaughn-dev/query_thalemine_as_jbrowse_index_v0.1/search", 
+        "state_url": "https://adama-dev.tacc.utexas.edu/community/v0.3/vaughn-dev/query_thalemine_as_jbrowse_index_v0.1"
+    }, 
+    "status": "success"
+}
+
+# List available services
+
+curl -sk -L -X GET $API/$NS/services -H "Authorization: Bearer $TOKEN"
+{
+    "result": [
+        {
+            "code_dir": "/tmp/tmpYeTTFX/user_code", 
+            "description": "Query Thalemine", 
+            "json_path": "", 
+            "language": "python", 
+            "main_module": "main.py", 
+            "metadata": "", 
+            "name": "query_thalemine_as_jbrowse_index", 
+            "namespace": "vaughn-dev", 
+            "notify": "", 
+            "requirements": [], 
+            "type": "map_filter", 
+            "url": "https://apps.araport.org/thalemine/service/jbrowse/names/3702", 
+            "version": 0.1, 
+            "whitelist": [
+                "apps.araport.org", 
+                "apps.araport.org"
+            ], 
+            "workers": [
+                "b78265f520a66265685f49ae52e7bc5c53551e3f913454766614c609a2983445"
+            ]
+        }
+    ], 
+    "status": "success"
+}
+
+# Search. Since this is a map_filter adapter, the assumption is that
+# everything past serviceName_version/search is passed directly to the remote 
+# endpoint. The remote endpoint is expected to return JSON which can be
+# mapped and/or filtered via the service
+
+ curl -sk -L $API/$NS/query_thalemine_as_jbrowse_index_v0.1/search?startswith=FWA \
+>    -H "Authorization: Bearer $TOKEN"
+{"result": [
+{"location": {"start": 13038360, "tracks": ["TAIR10_loci"], "end": 13042443, "ref": "Chr4", "objectName": "AT4G25530"}, "name": "FWA"}
+, {"location": {"start": 13038360, "tracks": ["TAIR10_gene_models"], "end": 13042443, "ref": "Chr4", "objectName": "AT4G25530.1"}, "name": "FWA"}
+],
+"metadata": {},
+"status": "success"}
+
+
