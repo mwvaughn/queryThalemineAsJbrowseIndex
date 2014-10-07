@@ -93,13 +93,24 @@ curl -sk -L -X GET $API/$NS/services -H "Authorization: Bearer $TOKEN"
 # endpoint. The remote endpoint is expected to return JSON which can be
 # mapped and/or filtered via the service
 
- curl -sk -L $API/$NS/query_thalemine_as_jbrowse_index_v0.1/search?startswith=FWA \
->    -H "Authorization: Bearer $TOKEN"
-{"result": [
-{"location": {"start": 13038360, "tracks": ["TAIR10_loci"], "end": 13042443, "ref": "Chr4", "objectName": "AT4G25530"}, "name": "FWA"}
-, {"location": {"start": 13038360, "tracks": ["TAIR10_gene_models"], "end": 13042443, "ref": "Chr4", "objectName": "AT4G25530.1"}, "name": "FWA"}
-],
-"metadata": {},
-"status": "success"}
+curl -sk -L -H "Authorization: Bearer $TOKEN" $API/$NS/query_thalemine_as_jbrowse_index_v0.1/search?startswith=FWA
+ 
+{"result":[
+    {"location":
+        {"start":13038360,
+         "tracks":["TAIR10_loci"],
+         "end":13042443,
+         "ref":"Chr4",
+         "objectName":"AT4G25530"},
+     "name":"FWA"},
+    {"location":
+        {"start":13038360,
+         "tracks":["TAIR10_gene_models"],
+         "end":13042443,
+         "ref":"Chr4",
+         "objectName":"AT4G25530.1"},
+     "name":"FWA"}],
+ "metadata":
+    {},"status":"success"}
 
 
